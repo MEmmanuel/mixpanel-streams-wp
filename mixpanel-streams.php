@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name:    Mixpanel Streams
-Plugin URI:     http://mixpanel.com 
+Plugin URI:     http://mixpanel.com/api/docs/streams
 Description:    View your visitor activity stream in real-time with Mixpanel Streams 
 Version:        0.1
 Author:         Mixpanel, Inc. 
@@ -10,7 +10,6 @@ Author URI:     http://mixpanel.com
 $MP_DEBUG = 1;
 
 function mpstream_debug($message) {
-    
     global $MP_DEBUG;
     if ($MP_DEBUG && WP_DEBUG) { 
         error_log($message);      
@@ -18,29 +17,26 @@ function mpstream_debug($message) {
 }
 
 function mpstream_activate_plugin() {
-    add_option('mpstream_id','');
-    add_option('mpstream_enabled','0');
-}
-
-function mpstream_deactivate_plugin() {
-    remove_option('mpstream_id');
-    remove_option('mpstream_enabled');
+    add_option('mpstream_token', '');
 }
 
 function mpstream_track() {
-    mpstream_debug("in track");
-    if (get_option('mpstream_enabled') != 1) {
-        return;
-    }
-    mpstream_debug("before token");
-    $token = get_option('mpstream_id');
-    mpstream_debug("Token:" . $token);
+    $token = get_option('mpstream_token');
     if (!$token) {
+        mpstream_debug("Aborting due to missing token");
         return;
     }
-    mpstream_debug($token);
     mpstream_embed_js_lib($token);
     mpstream_add_tracking_calls();
+}
+
+function mpstream_track_comment() {
+    mpstream_debug("In track_comment");
+    ?>
+    <script type="text/javascript">
+        mpq.push(["track", "Comment added"]);
+    </script>
+    <?php
 }
 
 function mpstream_embed_js_lib($token) {
@@ -94,128 +90,29 @@ function mpstream_options_page_content() {
     ?>
     <div class="wrap">
     <h2>Mixpanel Streams</h2>
-    <form method="post" action="options-general.php?page=<?php echo $_GET['page']; ?>">
-    <!-- <form method="post"> -->
+    <form method="post"> 
+        <table class="form-table">
+            <tr valign="top">
+                <th scope="row">Token</th>
+                <td>
+                    <input style="width:280px;" type="text" name="mpstream_token" value="<?php echo get_option('mpstream_token'); ?>"/>
+                </td>
+                <td>
+                    Your token can be found at <a href="http://mixpanel.com/projects" target="_blank">http://mixpanel.com/projects</a>.
+                </td>
+            </tr>
 
-    <?php wp_nonce_field('update-options'); ?>
-    <table class="form-table">
-
-    <tr valign="top">
-    <th scope="row">Status</th>
-    <td><select name="mpstream_enabled"> 
-      <?php
-      $variants=array('1'=>'Enabled','0'=>'Disabled');
-      foreach($variants as $value=>$text) {
-         echo '<option value="',$value,'"';
-         if(get_option('mpstream_enabled')==$value) {
-            echo ' selected';
-         }
-         echo '>',$text,'</option>';
-      }
-      ?>
-    </select></td>
-    </tr>
-
-    <tr valign="top">
-    <th scope="row">Tracking ID</th>
-    <td><input style="width:280px; text-align:center;" type="text" name="mpstream_id" value="<?php echo get_option('mpstream_id'); ?>"/></td>
-    </tr>
-
-    <tr valign="top">
-    <th scope="row"> Include logged in users in statistics</th>
-    <td><select name="mpstream_loggedinlogging"> 
-      <?php
-      $variants=array('1'=>'Yes','0'=>'No');
-      foreach($variants as $value=>$text) {
-         echo '<option value="',$value,'"';
-         if(get_option('mpstream_loggedinlogging')==$value) {
-            echo ' selected';
-         }
-         echo '>',$text,'</option>';
-      }
-      ?>
-    </select></td>
-    </tr>
-
-
-    <tr valign="top">
-    <th>Track...</th><td></td>
-    </tr>
-
-    <tr valign="top">
-    <th scope="row"> - hits (page views)</th>
-    <td><select name="mpstream_track_pageviews"> 
-      <?php
-      $variants=array('1'=>'Yes','0'=>'No');
-      foreach($variants as $value=>$text) {
-         echo '<option value="',$value,'"';
-         if(get_option('mpstream_track_pageviews')==$value) {
-            echo ' selected';
-         }
-         echo '>',$text,'</option>';
-      }
-      ?>
-    </select></td>
-    </tr>
-
-    <tr valign="top">
-    <th scope="row"> - search engine visitors</th>
-    <td><select name="mpstream_track_search_engines"> 
-      <?php
-      $variants=array('1'=>'Yes','0'=>'No');
-      foreach($variants as $value=>$text) {
-         echo '<option value="',$value,'"';
-         if(get_option('mpstream_track_search_engines')==$value) {
-            echo ' selected';
-         }
-         echo '>',$text,'</option>';
-      }
-      ?>
-    </select></td>
-    </tr>
-
-    <tr valign="top">
-    <th scope="row"> - browsers</th>
-    <td><select name="mpstream_track_browsers"> 
-      <?php
-      $variants=array('1'=>'Yes','0'=>'No');
-      foreach($variants as $value=>$text) {
-         echo '<option value="',$value,'"';
-         if(get_option('mpstream_track_browsers')==$value) {
-            echo ' selected';
-         }
-         echo '>',$text,'</option>';
-      }
-      ?>
-    </select></td>
-    </tr>
-
-    <tr valign="top">
-    <th scope="row"> - operating system</th>
-    <td><select name="mpstream_track_os"> 
-      <?php
-      $variants=array('1'=>'Yes','0'=>'No');
-      foreach($variants as $value=>$text) {
-         echo '<option value="',$value,'"';
-         if(get_option('mpstream_track_browsers')==$value) {
-            echo ' selected';
-         }
-         echo '>',$text,'</option>';
-      }
-      ?>
-    </select></td>
-    </tr>
-
-    </table>
-    <p class="submit">
-    <input type="hidden" name="mpstreamupdateoptions" value="1"/>
-    <input type="submit" class="button-primary" value="<?php _e('Save Changes') ?>" />
-    </p>
-    </form></div><?php
+        </table>
+        <p class="submit">
+            <input type="hidden" name="mpstream_update_options" value="1"/>
+            <input type="submit" class="button-primary" value="<?php _e('Save Changes') ?>" />
+        </p>
+    </form>
+    </div>
+    <?php
 }
 
 register_activation_hook( __FILE__, 'mpstream_activate_plugin');
-register_deactivation_hook( __FILE__, 'mpstream_deactivate_plugin');
 add_action('wp_footer', mpstream_track);
 add_action('admin_menu', 'mpstream_add_options_page');
-
+?>
