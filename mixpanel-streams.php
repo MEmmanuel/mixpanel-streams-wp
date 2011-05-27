@@ -84,9 +84,9 @@ function mpstream_options_page_content() {
         $options = array(
             'mpstream_enabled',
             'mpstream_token'    
-        )
+        );
         foreach($options as $i=>$key) {
-            if (isset($_POST[$key]) {
+            if (isset($_POST[$key])) {
                 update_option($key, strip_tags($_POST[$key]));
             }
         }
