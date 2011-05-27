@@ -12,7 +12,7 @@ $MP_DEBUG = 1;
 function mpstream_debug($message) {
     global $MP_DEBUG;
     if ($MP_DEBUG && WP_DEBUG) { 
-        error_log($message);      
+        error_log("Mixpanel Streams Debug: " . $message);      
     }
 }
 
@@ -23,10 +23,10 @@ function mpstream_activate_plugin() {
 function mpstream_track() {
     $token = get_option('mpstream_token');
     if (!$token) {
-        mpstream_debug("Aborting due to missing token");
+        mpstream_debug("Aborting footer include due to missing token");
         return;
     }
-    mpstream_embed_js_lib($token);
+    mpstream_embed_js_lib();
     mpstream_add_tracking_calls();
 }
 
@@ -39,12 +39,25 @@ function mpstream_track_comment() {
     <?php
 }
 
-function mpstream_embed_js_lib($token) {
-    mpstream_debug("Embedding js lib");
+function mpstream_initialize() {
+    mpstream_debug("Initializing mpq in header");
+    $token = get_option('mpstream_token');
+    if (!$token) {
+        mpstream_debug("Aborting initialization due to missing token");
+        return;
+    }
     ?>
     <script type="text/javascript">
         var mpq = [];
         mpq.push(["init", "<?php echo $token; ?>"]);
+    </script>
+    <?php
+}
+
+function mpstream_embed_js_lib() {
+    mpstream_debug("Embedding js lib");
+    ?>
+    <script type="text/javascript">
         (function() {
             var mp = document.createElement("script"); mp.type = "text/javascript"; mp.async = true;
             mp.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + "//api.mixpanel.com/site_media/js/api/mixpanel.js";
@@ -113,6 +126,7 @@ function mpstream_options_page_content() {
 }
 
 register_activation_hook( __FILE__, 'mpstream_activate_plugin');
+add_action('wp_head', mpstream_initialize);
 add_action('wp_footer', mpstream_track);
 add_action('admin_menu', 'mpstream_add_options_page');
 ?>
