@@ -1,13 +1,13 @@
 <?php
 /*
 Plugin Name:    Mixpanel Streams
-Plugin URI:     http://mixpanel.com/api/docs/streams
-Description:    View your visitor activity stream in real-time with Mixpanel Streams 
+Plugin URI:     http://github.com/mixpanel/mixpanel-streams-wp
+Description:    Watch and learn about your users in real-time with Mixpanel Streams.
 Version:        0.1
 Author:         Mixpanel, Inc. 
 Author URI:     http://mixpanel.com 
 */
-$MP_DEBUG = 1;
+$MP_DEBUG = 0;
 
 function mpstream_debug($message) {
     global $MP_DEBUG;
@@ -28,15 +28,6 @@ function mpstream_track() {
     }
     mpstream_embed_js_lib();
     mpstream_add_tracking_calls();
-}
-
-function mpstream_track_comment() {
-    mpstream_debug("In track_comment");
-    ?>
-    <script type="text/javascript">
-        mpq.push(["track", "Comment added"]);
-    </script>
-    <?php
 }
 
 function mpstream_initialize() {
@@ -70,8 +61,7 @@ function mpstream_embed_js_lib() {
 function mpstream_add_tracking_calls() {
     ?>
     <script type="text/javascript">
-        mpq.push(["track_pageview"]);
-        mpq.push(["track", "Wordpress pageview"]);
+        mpq.push(["track_forms", "#commentform", "Add comment"]);
     </script>
     <?php
 }
@@ -91,7 +81,6 @@ function mpstream_options_page_content() {
     if (isset($_POST['mpstream_update_options'])) {
         mpstream_debug('Saving posted options: ' . var_export($_POST, true));
         $options = array(
-            'mpstream_enabled',
             'mpstream_token'    
         );
         foreach($options as $i=>$key) {
@@ -106,9 +95,9 @@ function mpstream_options_page_content() {
     <form method="post"> 
         <table class="form-table">
             <tr valign="top">
-                <th scope="row">Token</th>
-                <td>
-                    <input style="width:280px;" type="text" name="mpstream_token" value="<?php echo get_option('mpstream_token'); ?>"/>
+                <th scope="row" style="width: 100px;">Project token</th>
+                <td style="width: 280px">
+                    <input style="width:260px; padding: 2px 10px;" type="text" name="mpstream_token" value="<?php echo get_option('mpstream_token'); ?>"/>
                 </td>
                 <td>
                     Your token can be found at <a href="http://mixpanel.com/projects" target="_blank">http://mixpanel.com/projects</a>.
