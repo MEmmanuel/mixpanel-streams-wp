@@ -5,7 +5,7 @@ Requires at least: 3.1
 Tested up to: 3.1.3
 Stable tag: 1.0 
 
-This is the official Mixpanel plugin for Wordpress.  Watch and learn about your users in real-time with [Mixpanel Streams](http://mixpanel.com/streams).
+This is the official Mixpanel plugin for Wordpress.  Watch and learn about your users in real-time with Mixpanel Streams.
 
 == Description ==
 
@@ -16,7 +16,7 @@ visitors.  You will be able to see all of the pages that individual site visitor
 
 Installation is extremely simple. A Mixpanel account is required for this plugiin; if you don't one yet, you can register at http://mixpanel.com/streams.
 
-1. First, install the plugin via the Wordpress Plugin Directory
+1. Install the plugin via the Wordpress Plugin Directory
 1. Activate the plugin through the 'Plugins' menu in WordPress
 1. Copy your project token from your Project dashboard at [http://mixpanel.com/projects](http://mixpanel.com/projects)
 1. Click 'Mixpanel Streams' in the 'Settings' menu, and paste in the token you got in the previous step
