@@ -10,11 +10,13 @@ This is the official Mixpanel plugin for Wordpress.  Watch and learn about your 
 == Description ==
 
 This plugin is the easiest way to send data to Mixpanel.  Once you've enabled it, we will immediately start tracking pageviews and comments for all of your 
-visitors.  You will be able to see all of the pages that individual site visitors view, allowing you to see popular posts and common usage patterns for your site.
+visitors.  
+
+You will be able to see all of the pages that individual site visitors view, allowing you to see popular posts and common usage patterns for your site.
 
 == Installation ==
 
-Installation is extremely simple. A Mixpanel account is required for this plugiin; if you don't one yet, you can register at http://mixpanel.com/streams.
+Installation is extremely simple. A Mixpanel account is required for this plugin; if you don't one yet, you can register at http://mixpanel.com/streams.
 
 1. Install the plugin via the Wordpress Plugin Directory
 1. Activate the plugin through the 'Plugins' menu in WordPress

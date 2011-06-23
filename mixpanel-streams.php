@@ -3,7 +3,7 @@
 Plugin Name:    Mixpanel Streams
 Plugin URI:     http://github.com/mixpanel/mixpanel-streams-wp
 Description:    Watch and learn about your users in real-time with Mixpanel Streams.
-Version:        0.1
+Version:        1.0
 Author:         Mixpanel, Inc. 
 Author URI:     http://mixpanel.com 
 */
