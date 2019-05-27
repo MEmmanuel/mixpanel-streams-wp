@@ -115,7 +115,7 @@ function mpstream_options_page_content() {
 }
 
 register_activation_hook( __FILE__, 'mpstream_activate_plugin');
-add_action('wp_head', mpstream_initialize);
-add_action('wp_footer', mpstream_track);
+add_action('wp_head', 'mpstream_initialize');
+add_action('wp_footer', 'mpstream_track');
 add_action('admin_menu', 'mpstream_add_options_page');
 ?>
